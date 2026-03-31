@@ -30,6 +30,13 @@ public class UrlController {
 
     }
 
+    @GetMapping
+    public ResponseEntity<String> buscarContagem(@RequestParam("url") String url){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Quantidade de vezes acessado: " + urlService.buscarQuantidadeContador(url));
+
+    }
+
 
 
 }

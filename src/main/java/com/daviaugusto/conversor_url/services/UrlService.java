@@ -3,6 +3,7 @@ package com.daviaugusto.conversor_url.services;
 import com.daviaugusto.conversor_url.entity.Url;
 import com.daviaugusto.conversor_url.repository.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -20,6 +21,13 @@ public class UrlService {
         url.setContador(url.getContador() +1);
         urlRepository.save(url);
         return url.getUrlLonga();
+    }
+
+    public Integer buscarQuantidadeContador(String url){
+        Url urlEntity = urlRepository.findByUrlLonga(url).orElseThrow(
+                () -> new RuntimeException("Url não encontrada"));
+
+        return urlEntity.getContador();
     }
 
 
@@ -49,6 +57,13 @@ public class UrlService {
             sb.append(caracteres.charAt(index));
         }
         return sb.toString();
+    }
+
+
+    @Scheduled(cron = "${cron.horario}")
+    public void detelarUrlExpiradas(){
+
+
     }
 
 
