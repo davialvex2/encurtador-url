@@ -14,6 +14,14 @@ public class UrlService {
     private UrlRepository urlRepository;
 
 
+    public String buscarUrlLonga(String urlCurta){
+        Url url = urlRepository.findByUrlCurta(urlCurta).orElseThrow(
+                () -> new RuntimeException("Url não encontrada"));
+        url.setContador(url.getContador() +1);
+        urlRepository.save(url);
+        return url.getUrlLonga();
+    }
+
 
 
     public String salvarUrl(String urlLonga){
@@ -24,6 +32,7 @@ public class UrlService {
             urlCriada = logicaUrlCurta();
         }
         url.setUrlCurta(urlCriada);
+        url.setContador(0);
         urlRepository.save(url);
         return url.getUrlCurta();
     }
