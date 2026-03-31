@@ -7,4 +7,6 @@ public interface UrlRepository extends JpaRepository<Url, Long> {
 
     Url findByUrlLonga(String url);
 
+    boolean existsByUrlCurta(String url);
+
 }

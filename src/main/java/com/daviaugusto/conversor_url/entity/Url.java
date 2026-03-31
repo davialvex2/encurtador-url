@@ -13,16 +13,17 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String urlLonga;
+    private String urlCurta;
     private Integer contador;
 
 
     public Url() {
     }
 
-    public Url(Long id, String urlLonga, Integer contador) {
+    public Url(Long id, String urlLonga, String urlCurta, Integer contador) {
         this.id = id;
-
         this.urlLonga = urlLonga;
+        this.urlCurta = urlCurta;
         this.contador = contador;
     }
 
@@ -40,6 +41,14 @@ public class Url {
 
     public void setUrlLonga(String urlLonga) {
         this.urlLonga = urlLonga;
+    }
+
+    public String getUrlCurta() {
+        return urlCurta;
+    }
+
+    public void setUrlCurta(String urlCurta) {
+        this.urlCurta = urlCurta;
     }
 
     public Integer getContador() {
