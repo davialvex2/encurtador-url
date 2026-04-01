@@ -1,10 +1,13 @@
 package com.daviaugusto.conversor_url.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Url {
@@ -15,16 +18,19 @@ public class Url {
     private String urlLonga;
     private String urlCurta;
     private Integer contador;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime horarioExpiracao;
 
 
     public Url() {
     }
 
-    public Url(Long id, String urlLonga, String urlCurta, Integer contador) {
+    public Url(Long id, String urlLonga, String urlCurta, Integer contador, LocalDateTime horarioExpiracao) {
         this.id = id;
         this.urlLonga = urlLonga;
         this.urlCurta = urlCurta;
         this.contador = contador;
+        this.horarioExpiracao = horarioExpiracao;
     }
 
     public Long getId() {
@@ -57,5 +63,13 @@ public class Url {
 
     public void setContador(Integer contador) {
         this.contador = contador;
+    }
+
+    public LocalDateTime getHorarioExpiracao() {
+        return horarioExpiracao;
+    }
+
+    public void setHorarioExpiracao(LocalDateTime horarioExpiracao) {
+        this.horarioExpiracao = horarioExpiracao;
     }
 }

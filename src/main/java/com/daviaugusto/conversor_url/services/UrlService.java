@@ -2,11 +2,16 @@ package com.daviaugusto.conversor_url.services;
 
 import com.daviaugusto.conversor_url.entity.Url;
 import com.daviaugusto.conversor_url.repository.UrlRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
+
 
 @Service
 public class UrlService {
@@ -14,13 +19,21 @@ public class UrlService {
     @Autowired
     private UrlRepository urlRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(UrlService.class);
+
 
     public String buscarUrlLonga(String urlCurta){
         Url url = urlRepository.findByUrlCurta(urlCurta).orElseThrow(
                 () -> new RuntimeException("Url não encontrada"));
-        url.setContador(url.getContador() +1);
-        urlRepository.save(url);
-        return url.getUrlLonga();
+        if(url.getHorarioExpiracao().isBefore(LocalDateTime.now())){
+            urlRepository.delete(url);
+            throw  new RuntimeException("Url expirada");
+        }
+        else {
+            url.setContador(url.getContador() + 1);
+            urlRepository.save(url);
+            return url.getUrlLonga();
+        }
     }
 
     public Integer buscarQuantidadeContador(String url){
@@ -41,6 +54,7 @@ public class UrlService {
         }
         url.setUrlCurta(urlCriada);
         url.setContador(0);
+        url.setHorarioExpiracao(LocalDateTime.now().plusMinutes(2));
         urlRepository.save(url);
         return url.getUrlCurta();
     }
@@ -60,10 +74,10 @@ public class UrlService {
     }
 
 
-    @Scheduled(cron = "${cron.horario}")
+    @Scheduled(fixedRate = 60000)
     public void detelarUrlExpiradas(){
-
-
+        urlRepository.deleteByHorarioExpiracaoBefore(LocalDateTime.now());
+        logger.info("Url(s) apagada(s)");
     }
 
 
