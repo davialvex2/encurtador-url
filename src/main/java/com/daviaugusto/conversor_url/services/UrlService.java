@@ -1,6 +1,7 @@
 package com.daviaugusto.conversor_url.services;
 
 import com.daviaugusto.conversor_url.entity.Url;
+import com.daviaugusto.conversor_url.exceptions.ResourceNotFoundException;
 import com.daviaugusto.conversor_url.repository.UrlRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,10 @@ public class UrlService {
 
     public String buscarUrlLonga(String urlCurta){
         Url url = urlRepository.findByUrlCurta(urlCurta).orElseThrow(
-                () -> new RuntimeException("Url não encontrada"));
+                () -> new ResourceNotFoundException("Url não encontrada"));
         if(url.getHorarioExpiracao().isBefore(LocalDateTime.now())){
             urlRepository.delete(url);
-            throw  new RuntimeException("Url expirada");
+            throw  new ResourceNotFoundException("Url expirada");
         }
         else {
             url.setContador(url.getContador() + 1);
@@ -38,7 +39,7 @@ public class UrlService {
 
     public Integer buscarQuantidadeContador(String url){
         Url urlEntity = urlRepository.findByUrlLonga(url).orElseThrow(
-                () -> new RuntimeException("Url não encontrada"));
+                () -> new ResourceNotFoundException("Url não encontrada"));
 
         return urlEntity.getContador();
     }
