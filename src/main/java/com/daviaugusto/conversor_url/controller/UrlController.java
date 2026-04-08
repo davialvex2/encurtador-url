@@ -17,15 +17,15 @@ public class UrlController {
     private UrlService urlService;
 
 
-    @PostMapping("/{urlLonga}")
-    public ResponseEntity<String> criarUrlCurta(@PathVariable String urlLonga){
+    @PostMapping
+    public ResponseEntity<String> criarUrlCurta(@RequestParam("urlLonga") String urlLonga){
         return ResponseEntity.status(HttpStatus.CREATED).body(urlService.salvarUrl(urlLonga));
     }
 
     @GetMapping("/{urlCurta}")
     public ResponseEntity<Void> buscarUrlLonga(@PathVariable String urlCurta){
         String url = urlService.buscarUrlLonga(urlCurta);
-        URI uri = URI.create("https://" + url);
+        URI uri = URI.create(url);
         return ResponseEntity.status(HttpStatus.FOUND).location(uri).build();
 
     }

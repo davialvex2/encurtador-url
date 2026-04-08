@@ -1,6 +1,7 @@
 package com.daviaugusto.conversor_url.services;
 
 import com.daviaugusto.conversor_url.entity.Url;
+import com.daviaugusto.conversor_url.exceptions.IllegalArgumentsException;
 import com.daviaugusto.conversor_url.exceptions.ResourceNotFoundException;
 import com.daviaugusto.conversor_url.repository.UrlRepository;
 import org.slf4j.Logger;
@@ -47,6 +48,9 @@ public class UrlService {
 
 
     public String salvarUrl(String urlLonga){
+        if(!urlLonga.startsWith("http://")){
+            throw new IllegalArgumentsException("A url digitada não é valida, tente algo como (http://exemplo.com)");
+        }
         Url url = new Url();
         url.setUrlLonga(urlLonga);
         String urlCriada = logicaUrlCurta();
@@ -75,11 +79,12 @@ public class UrlService {
     }
 
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(cron = "${cron.horario}")
     public void detelarUrlExpiradas(){
         urlRepository.deleteByHorarioExpiracaoBefore(LocalDateTime.now());
         logger.info("Url(s) apagada(s)");
     }
+
 
 
 }
