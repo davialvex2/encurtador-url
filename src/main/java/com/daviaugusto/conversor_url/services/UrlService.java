@@ -48,7 +48,7 @@ public class UrlService {
 
 
     public String salvarUrl(String urlLonga){
-        if(!urlLonga.startsWith("http://")){
+        if(!urlLonga.startsWith("http://") && !urlLonga.startsWith("https://")){
             throw new IllegalArgumentsException("A url digitada não é valida, tente algo como (http://exemplo.com)");
         }
         Url url = new Url();
@@ -61,7 +61,7 @@ public class UrlService {
         url.setContador(0);
         url.setHorarioExpiracao(LocalDateTime.now().plusMinutes(2));
         urlRepository.save(url);
-        return url.getUrlCurta();
+        return "http://localhost:8080/url/" + url.getUrlCurta();
     }
 
 
